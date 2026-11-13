@@ -1,0 +1,307 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Results tables · Review materials</title><link rel="stylesheet" href="c90b96982/style.css"><script src="jfb80a026/config.js"></script><script src="jfb80a026/common.js"></script><script src="d6472958f/grids.js"></script><script src="d6472958f/runs.js"></script><script src="d6472958f/relaxed.js"></script></head><body><main>
+<h1>Results tables</h1>
+<p class="lead">All results tables in one place, with a live table you can slice. “Within 1 kcal/mol” means the barrier estimate at the moment the search stops is within 1 kcal/mol of the full-grid Skala barrier.</p>
+<div class="stats">
+<div class="stat"><b>74.87</b><span>kcal/mol, full-grid Skala barrier, vinyl alcohol (247 points)</span></div>
+<div class="stat"><b>59.42</b><span>kcal/mol, full-grid Skala barrier, formamide (247 of 247 converged)</span></div>
+<div class="stat"><b>68 / 70</b><span>distinct agent runs within 1 kcal/mol at stop</span></div>
+<div class="stat"><b>0–1 / 8</b><span>starts for the best fixed rule when the start misses the well</span></div>
+</div>
+<nav class="small"><a href="#live">Live table</a> · <a href="#t1">Table 1</a> · <a href="#t2">Table 2</a> · <a href="#t3">Table 3</a> · <a href="#s1">Table S1</a> · <a href="#s2">Table S2</a> · <a href="#s3">Table S3</a> · <a href="#ref">Reference checks</a></nav>
+<h2 id="live">Live table from the stored runs</h2>
+<div class="controls"><label>Reaction<select id="lm"><option value="v">Vinyl alcohol</option><option value="f">Formamide</option></select></label><label>Sort by<select id="ls"><option value="ok">starts within 1 kcal/mol</option><option value="err">median error</option><option value="n">median calls</option></select></label></div>
+<div class="tablewrap"><table id="livet"></table></div>
+<p class="small">Stored session: vinyl alcohol run A and formamide run B (agent rows); the fixed rules are the same in both sessions. Table 2 below also gives the other session. Edge-anchor agent rows for vinyl alcohol are the NB10 runs.</p>
+<h2 id="t1">Table 1 · Main comparison, edge-anchor design (vinyl alcohol)</h2><div class="panel" style="margin:12px 0"><b>Table 1.</b> Main comparison under the edge-anchor starting design (8 starts).<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Within 1 kcal/mol at stop</th>
+<th>Calls at stop (median)</th>
+<th>Error at stop (median, kcal/mol)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full grid scan</td>
+<td>by definition</td>
+<td>247</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Best classical rule (saddle exploitation + Δ-learning)</td>
+<td>1 of 8</td>
+<td>24</td>
+<td>1.69</td>
+</tr>
+<tr>
+<td>Frozen twin</td>
+<td>1 of 8</td>
+<td>24</td>
+<td>3.29</td>
+</tr>
+<tr>
+<td>Anchor-first control (hand-written)</td>
+<td>5 of 8</td>
+<td>15</td>
+<td>0.32</td>
+</tr>
+<tr>
+<td><strong>Menu agent</strong></td>
+<td><strong>8 of 8</strong></td>
+<td><strong>12</strong></td>
+<td><strong>0.01</strong></td>
+</tr>
+</tbody>
+</table></div></div>
+<h2 id="t2">Table 2 · Three starting designs on two reactions</h2><div class="panel" style="margin:12px 0"><b>Table 2.</b> Three starting designs on two reactions. Each cell gives: starts within 1 kcal/mol at stop, of 8; median error (kcal/mol); median calls at stop. Run A and run B are two sessions that share part of their agent runs (Methods 2.3, Table S3). On formamide, eight runs of run A were reused and not printed. Its cells take them to be the first eight runs of run B, which reproduces the summary that run A printed.<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Reaction and starting design</th>
+<th>Best classical rule (named in advance)</th>
+<th>Frozen twin</th>
+<th>Reordered twin</th>
+<th>Anchor-first control</th>
+<th>Menu agent, run A</th>
+<th>Menu agent, run B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vinyl alcohol, edge anchors (θ = 0 and 180)</td>
+<td>1 of 8; 1.69; 24</td>
+<td>1 of 8; 3.29; 24</td>
+<td>5 of 8; 0.18; 13.5</td>
+<td>5 of 8; 0.32; 15</td>
+<td>8 of 8; 0.01; 12</td>
+<td>8 of 8; 0.01; 12</td>
+</tr>
+<tr>
+<td>Vinyl alcohol, the scout's two wells</td>
+<td>7 of 8; 0.04; 14.5</td>
+<td>6 of 8; 0.04; 24</td>
+<td>7 of 8; 0.01; 14</td>
+<td>4 of 8; 1.30; 18</td>
+<td>8 of 8; 0.00; 10</td>
+<td>8 of 8; 0.00; 9.5</td>
+</tr>
+<tr>
+<td>Vinyl alcohol, four random points</td>
+<td>0 of 8; 3.00; 24</td>
+<td>2 of 8; 2.49; 24</td>
+<td>6 of 8; 0.50; 15.5</td>
+<td>2 of 8; 2.94; 24</td>
+<td>6 of 8; 0.01; 13</td>
+<td>7 of 8; 0.04; 13</td>
+</tr>
+<tr>
+<td>Formamide, edge anchors</td>
+<td>1 of 8; 2.03; 21.5</td>
+<td>0 of 8; 3.70; 23.5</td>
+<td>7 of 8; 0.32; 13</td>
+<td>7 of 8; 0.25; 13</td>
+<td>8 of 8; 0.25; 11</td>
+<td>8 of 8; 0.28; 12</td>
+</tr>
+<tr>
+<td>Formamide, the scout's two wells</td>
+<td>8 of 8; 0.22; 12.5</td>
+<td>8 of 8; 0.14; 10</td>
+<td>8 of 8; 0.19; 10.5</td>
+<td>7 of 8; 0.25; 12</td>
+<td>8 of 8; 0.16; 8</td>
+<td>8 of 8; 0.00; 8</td>
+</tr>
+<tr>
+<td>Formamide, four random points</td>
+<td>1 of 8; 5.95; 23.5</td>
+<td>2 of 8; 3.06; 24</td>
+<td>8 of 8; 0.29; 12</td>
+<td>7 of 8; 0.25; 11.5</td>
+<td>8 of 8; 0.09; 11</td>
+<td>8 of 8; 0.00; 12.5</td>
+</tr>
+</tbody>
+</table></div></div>
+<h2 id="t3">Table 3 · Where the failed runs went wrong</h2><div class="panel" style="margin:12px 0"><b>Table 3.</b> Where the failed runs went wrong. Runs more than 1 kcal/mol off at stop, of 48 per method, by the larger part of the error. Agent: the stored runs (vinyl alcohol run A, formamide run B).<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Failed, of 48</th>
+<th>Well never measured</th>
+<th>Floor measured, but a lower one placed at an unmeasured point</th>
+<th>Pass estimated too low</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Best classical rule</td>
+<td>30</td>
+<td>25</td>
+<td>5</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Frozen twin</td>
+<td>29</td>
+<td>26</td>
+<td>3</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Anchor-first control</td>
+<td>16</td>
+<td>0</td>
+<td>12</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Reordered twin</td>
+<td>7</td>
+<td>1</td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr>
+<td><strong>Menu agent</strong></td>
+<td><strong>2</strong></td>
+<td><strong>0</strong></td>
+<td><strong>0</strong></td>
+<td><strong>2</strong></td>
+</tr>
+</tbody>
+</table></div></div>
+<h2 id="s1">Table S1 · The relaxed path (all atoms free)</h2>
+<div class="panel"><canvas id="rp"></canvas><div class="legend"><span><i style="background:#1b6b6b"></i>Skala, enol-side scan</span><span><i style="background:#b4532a"></i>Skala, keto-side scan</span><span><i style="background:#888"></i>lower envelope</span><span><i style="background:#c9a227"></i>xTB</span></div></div>
+<div class="tablewrap"><table id="s1t"></table></div>
+<p class="small">Energies are Skala single points on xTB-relaxed geometries, relative to the relaxed enol, in kcal/mol. q = d(O–H) − d(C–H). The lower envelope has a top of 57.6; xTB alone 59.9; the rigid grid 74.9.</p>
+<h2 id="s2">Table S2 · Predictions set before the runs, and what happened</h2><div class="panel" style="margin:12px 0"><b>Table S2.</b> Predictions set before the runs, and what happened. The predictions are printed in notebooks NB12a and NB12b. The first two for vinyl alcohol, and part of the third and fourth, were already known from the earlier pilot. &quot;Run A / run B&quot; are the two executed copies of each notebook. They share part of their agent runs (Table S3).<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Prediction</th>
+<th>Vinyl alcohol</th>
+<th>Formamide</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1. With the scout's wells in the start, the best classical rule reaches at least 6 of 8.</td>
+<td>Held: 7 and 7 of 8.</td>
+<td>Held: 8 and 8 of 8.</td>
+</tr>
+<tr>
+<td>P2. Without the well in the start (random points, edge anchors), the best classical rule and the frozen twin each reach at most 3 of 8.</td>
+<td>Held: rule 0 and 1, twin 2 and 1 of 8.</td>
+<td>Held: rule 1 and 1, twin 2 and 0 of 8.</td>
+</tr>
+<tr>
+<td>P3. The agent reaches at least 7 of 8 under every design.</td>
+<td>Run A failed (6 of 8 with random points); run B held (7 of 8).</td>
+<td>Held in both runs (8, 8, 8 of 8).</td>
+</tr>
+<tr>
+<td>P4. Under random points and edge anchors, the agent measures the reference well before it stops in at least 7 of 8 starts, and earlier than its twin.</td>
+<td>Held in both runs: 8 of 8 in both designs, first at call 8 against 24 or 25 for the twin.</td>
+<td>Failed the strict score in both runs: 6 of 8 with random points, 4 of 8 with edge anchors. In the stored run B, the other starts had a best point 0.57 kcal/mol above the floor.</td>
+</tr>
+<tr>
+<td>P5. With the scout's wells in the start, the agent's error is within 0.5 kcal/mol of the best classical rule and it uses no more calls.</td>
+<td>Held: error 0.00 against 0.04; 10 calls against 14.</td>
+<td>Held: error 0.16 and 0.00 against 0.22; 8 calls against 12.</td>
+</tr>
+</tbody>
+</table></div></div>
+<h2 id="s3">Table S3 · Agent runs shared by the two sessions</h2><div class="panel" style="margin:12px 0"><b>Table S3.</b> Agent runs shared by the two sessions, and the count of distinct runs. For vinyl alcohol the shared runs have identical run times in both printed logs. For formamide they are inferred: run A did not print its eight reused runs, and its printed summary is reproduced exactly if they are the first eight runs of run B.<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Reaction and starting design</th>
+<th>Starts with one run, shared by both sessions</th>
+<th>Starts run independently in each session</th>
+<th>Distinct runs</th>
+<th>Within 1 kcal/mol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vinyl alcohol, edge anchors</td>
+<td>0 to 7 (stored runs of the main comparison)</td>
+<td>none</td>
+<td>8</td>
+<td>8</td>
+</tr>
+<tr>
+<td>Vinyl alcohol, the scout's two wells</td>
+<td>0 to 4, 7</td>
+<td>5, 6</td>
+<td>10</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Vinyl alcohol, four random points</td>
+<td>0 to 3</td>
+<td>4 to 7</td>
+<td>12</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Formamide, edge anchors</td>
+<td>0, 1</td>
+<td>2 to 7</td>
+<td>14</td>
+<td>14</td>
+</tr>
+<tr>
+<td>Formamide, the scout's two wells</td>
+<td>0 to 2</td>
+<td>3 to 7</td>
+<td>13</td>
+<td>13</td>
+</tr>
+<tr>
+<td>Formamide, four random points</td>
+<td>0 to 2</td>
+<td>3 to 7</td>
+<td>13</td>
+<td>13</td>
+</tr>
+<tr>
+<td>All</td>
+<td></td>
+<td>22</td>
+<td>70</td>
+<td>68</td>
+</tr>
+</tbody>
+</table></div></div>
+<h2 id="ref">Reference checks (Results 3.8 and 3.9)</h2>
+<div class="tablewrap"><table><thead><tr><th>Check</th><th class="num">Value</th><th>Reading</th></tr></thead><tbody>
+<tr><td>Finer Skala re-scan of the pass (441 points)</td><td class="num">78.3</td><td>3.4 kcal/mol above the coarse grid; pass at θ 85, r 0.95 Å</td></tr>
+<tr><td>Rigid-recipe grid barrier</td><td class="num">74.9</td><td>the reference all errors are measured against</td></tr>
+<tr><td>Relaxed path, xTB</td><td class="num">59.9</td><td>all atoms free, xTB geometries and energies</td></tr>
+<tr><td>Relaxed path, Skala on xTB geometries (lower envelope)</td><td class="num">57.6</td><td>an estimate; not a Skala transition-state search</td></tr>
+<tr><td>Keto minus enol, Skala</td><td class="num">−12.0</td><td>keto form lower</td></tr>
+<tr><td>Density meters cross</td><td class="num">q = −0.10 Å</td><td>at the pass</td></tr>
+<tr><td>Formamide: finer grid or relaxed scan</td><td class="num">not done</td><td>open</td></tr></tbody></table></div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+function live(){const m=$("lm").value;const G=GRIDS[SI.molKey(m)];
+  const arms=[...new Set(RUNS.filter(r=>r.m===m).map(r=>r.a))];
+  const designs=["e","s","r"];
+  const rows=arms.map(a=>{const o={a};designs.forEach(c=>{const R=RUNS.filter(r=>r.m===m&&r.a===a&&r.c===c);o[c]={ok:R.filter(r=>r.ok).length,n:R.length,err:SI.median(R.map(r=>Math.abs(r.e))),calls:SI.median(R.map(r=>r.n))}});
+    const all=RUNS.filter(r=>r.m===m&&r.a===a);o.ok=all.filter(r=>r.ok).length;o.err=SI.median(all.map(r=>Math.abs(r.e)));o.n=SI.median(all.map(r=>r.n));return o});
+  const k=$("ls").value;rows.sort((x,y)=>k==="ok"?y.ok-x.ok:(x[k]-y[k]));
+  $("livet").innerHTML='<thead><tr><th>Method</th>'+designs.map(c=>'<th>'+SI.designName(c)+'<br><span class="small">within 1 · median error · median calls</span></th>').join("")+'<th>All 24 starts</th></tr></thead><tbody>'+
+   rows.map(o=>'<tr'+(o.a==="agent"?' class="hl"':'')+'><td>'+SI.armName(o.a)+'</td>'+designs.map(c=>'<td>'+o[c].ok+' of '+o[c].n+' · '+SI.fmt(o[c].err)+' · '+SI.fmt(o[c].calls,1)+'</td>').join("")+'<td><b>'+o.ok+'</b> of 24</td></tr>').join("")+'</tbody>';}
+$("lm").onchange=live;$("ls").onchange=live;live();
+// S1
+(function(){const R=RELAXED;$("s1t").innerHTML='<thead><tr><th>Frame</th><th class="num">q (Å)</th><th class="num">Skala (kcal/mol)</th><th class="num">O–H</th><th class="num">C–H</th><th class="num">C–C</th><th class="num">C–O</th></tr></thead><tbody>'+R.table.map(r=>'<tr><td>'+r.frame+'</td><td class="num">'+r.q_A+'</td><td class="num">'+r.skala_rel_kcal_mol+'</td><td class="num">'+r.d_O_H_A+'</td><td class="num">'+r.d_Cterminal_H_A+'</td><td class="num">'+r.d_C_C_A+'</td><td class="num">'+r.d_C_O_A+'</td></tr>').join("")+'</tbody>'})();
+function relaxed(){const R=RELAXED,cv=$("rp"),W=Math.min(820,cv.parentElement.clientWidth-24),H=300;const d=devicePixelRatio||1;cv.width=W*d;cv.height=H*d;cv.style.width=W+"px";cv.style.height=H+"px";const x=cv.getContext("2d");x.setTransform(d,0,0,d,0,0);
+ const ml=46,mb=30,mt=10,mr=10,X=q=>ml+(q+1.6)/3.2*(W-ml-mr),Y=e=>mt+(80-e)/95*(H-mt-mb);x.strokeStyle=SI.css("--line");x.fillStyle=SI.css("--mut");x.font="11px sans-serif";
+ for(let e=-10;e<=80;e+=10){x.beginPath();x.moveTo(ml,Y(e));x.lineTo(W-mr,Y(e));x.stroke();x.textAlign="right";x.fillText(e,ml-4,Y(e)+4)}
+ for(let q=-1.5;q<=1.5;q+=.5){x.textAlign="center";x.fillText(q.toFixed(1),X(q),H-14)}x.fillText("q = d(O–H) − d(C–H)  (Å)",ml+(W-ml-mr)/2,H-2);
+ x.setLineDash([6,4]);x.strokeStyle="#888";x.beginPath();x.moveTo(ml,Y(R.rigid));x.lineTo(W-mr,Y(R.rigid));x.stroke();x.fillStyle="#888";x.textAlign="left";x.fillText("rigid grid "+R.rigid,ml+6,Y(R.rigid)-4);x.setLineDash([]);
+ const line=(q,e,c,w)=>{x.strokeStyle=c;x.lineWidth=w;x.beginPath();q.forEach((v,i)=>i?x.lineTo(X(v),Y(e[i])):x.moveTo(X(v),Y(e[i])));x.stroke()};
+ line(R.qx,R.xtb,"#c9a227",1.6);line(R.q,R.fwd,"#1b6b6b",1.8);line(R.q,R.rev,"#b4532a",1.8);line(R.q,R.env,"#777",3);}
+relaxed();document.addEventListener("themechange",relaxed);
+</script></body></html>

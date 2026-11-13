@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Animations · Review materials</title><link rel="stylesheet" href="c90b96982/style.css">
+<script src="jfb80a026/config.js"></script><script src="jfb80a026/common.js"></script><script src="d6472958f/density.js"></script></head><body><main>
+<h1>Animations</h1>
+<p class="lead">Three ways to watch the study run: the replay of one search, the electron density along the reaction, and the call-by-call explorer.</p>
+<h2>1 · Replay: agent against the best fixed rule</h2>
+<div class="panel"><img src="i0aa3ac5c/replay.gif" alt="Animated replay of one start on vinyl alcohol: the agent and the best classical rule choose points call by call" style="max-width:100%;background:#fff;border-radius:6px"><p class="small">Start 0 on vinyl alcohol, edge-anchor design. Numbers in circles give the order of the expensive calls; the first four are the shared start. The lower strips show the error of the barrier estimate against the number of calls. The agent falls below 1 kcal/mol at call 9 and stops at call 12; the fixed rule is still 1.5 kcal/mol off after 24 calls.</p></div>
+<h2>2 · Skala electron density along the cheapest path</h2>
+<p>Nine frames from the vinyl alcohol enol (left) to acetaldehyde (right), in the plane of the molecule. Two “meters” read the density in the O–H bond and the C–H bond. They cross at the pass (q = −0.10 Å). Density is shown on a square-root scale.</p>
+<div class="controls"><button class="btn" id="play">▶ Play</button><label>Frame: <b id="fv"></b><input type="range" id="f" min="0" max="8" value="0"></label></div>
+<div class="panels"><div class="panel"><canvas id="rho"></canvas></div><div class="panel"><canvas id="mt"></canvas><div class="legend"><span><i style="background:#b4532a"></i>O–H density meter</span><span><i style="background:#1b6b6b"></i>C–H density meter</span></div><p class="small" id="ft"></p></div></div>
+<p class="small">Source: NB11 (L4 GPU run, 2026-11-12), 9 frames on a 60 × 75 point plane, from <code>density_frames.npz</code>.</p>
+<h2>3 · Call-by-call explorer</h2>
+<p>Pick any start, any two methods, and press play. Three presets:</p>
+<div class="grid">
+<a class="card" href="03454c9f.html?m=v&c=e&s=0&a=agent&b=saddle_exploit%2Bdelta"><h3>Agent against the best fixed rule</h3><p>Vinyl alcohol, edge anchors, start 0. The fixed rule never measures the starting well.</p></a>
+<a class="card" href="03454c9f.html?m=v&c=e&s=0&a=twin&b=twin_wells_first"><h3>Frozen twin against reordered twin</h3><p>Same menu and rule; only the order of two steps differs.</p></a>
+<a class="card" href="03454c9f.html?m=v&c=r&s=0&a=agent&b=twin_wells_first"><h3>A failure both share</h3><p>Vinyl alcohol, random points, start 0. Both land on the false pass.</p></a>
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);let timer=null;
+function draw(){const D=DENSITY,f=+$("f").value;$("fv").textContent=(f+1)+" of 9";
+ const cv=$("rho"),nx=D.x.length,ny=D.y.length,cs=5,W=nx*cs+50,H=ny*cs+34;const d=devicePixelRatio||1;cv.width=W*d;cv.height=H*d;cv.style.width=W+"px";cv.style.height=H+"px";const x=cv.getContext("2d");x.setTransform(d,0,0,d,0,0);
+ const fr=D.rho[f];for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){const v=Math.sqrt(Math.max(0,fr[j][i]))/Math.sqrt(40);x.fillStyle=SI.viridis(Math.min(1,v));x.fillRect(40+i*cs,(ny-1-j)*cs+6,cs+.5,cs+.5)}
+ x.fillStyle=SI.css("--mut");x.font="11px sans-serif";x.textAlign="center";for(let v=-2;v<=3;v++){const i=(v-D.x[0])/(D.x[nx-1]-D.x[0])*nx;x.fillText(v,40+i*cs,H-16)}x.fillText("x (Å)",40+nx*cs/2,H-3);
+ x.textAlign="right";for(let v=-2;v<=3;v++){const j=(v-D.y[0])/(D.y[ny-1]-D.y[0])*ny;x.fillText(v,36,(ny-1-j)*cs+10)}
+ // meters
+ const m=$("mt"),w=Math.min(520,m.parentElement.clientWidth-24),h=250;m.width=w*d;m.height=h*d;m.style.width=w+"px";m.style.height=h+"px";const c=m.getContext("2d");c.setTransform(d,0,0,d,0,0);
+ const ml=44,mb=28,mt=10,mr=10,X=q=>ml+(q+1.8)/3.6*(w-ml-mr),Y=v=>mt+(0.42-v)/0.42*(h-mt-mb);c.strokeStyle=SI.css("--line");c.fillStyle=SI.css("--mut");c.font="11px sans-serif";
+ for(let v=0;v<=.4;v+=.1){c.beginPath();c.moveTo(ml,Y(v));c.lineTo(w-mr,Y(v));c.stroke();c.textAlign="right";c.fillText(v.toFixed(1),ml-4,Y(v)+4)}
+ for(let q=-1.5;q<=1.5;q+=.5){c.textAlign="center";c.fillText(q.toFixed(1),X(q),h-12)}c.fillText("q = d(O–H) − d(C–H)  (Å)",ml+(w-ml-mr)/2,h-1);
+ [["mOH","#b4532a"],["mCH","#1b6b6b"]].forEach(([k,col])=>{c.strokeStyle=col;c.lineWidth=2.2;c.beginPath();D[k].forEach((v,i)=>i?c.lineTo(X(D.q[i]),Y(v)):c.moveTo(X(D.q[0]),Y(v)));c.stroke();c.fillStyle=col;D[k].forEach((v,i)=>{c.beginPath();c.arc(X(D.q[i]),Y(v),i===f?6:3,0,7);c.fill()})});
+ c.setLineDash([4,4]);c.strokeStyle=SI.css("--fg");c.lineWidth=1;c.beginPath();c.moveTo(X(-0.097),mt);c.lineTo(X(-0.097),h-mb);c.stroke();c.setLineDash([]);
+ $("ft").innerHTML="Frame "+(f+1)+": q = "+D.q[f].toFixed(2)+" Å, energy "+D.E[f].toFixed(1)+" kcal/mol above frame 1, O–H meter "+D.mOH[f].toFixed(3)+", C–H meter "+D.mCH[f].toFixed(3)+". The dashed line marks the crossing at the pass."}
+$("f").oninput=()=>{stop();draw()};function stop(){if(timer){clearInterval(timer);timer=null;$("play").textContent="▶ Play"}}
+$("play").onclick=()=>{if(timer){stop();return}if(+$("f").value>=8)$("f").value=0;$("play").textContent="❚❚ Pause";draw();timer=setInterval(()=>{if(+$("f").value>=8){stop();return}$("f").value=+$("f").value+1;draw()},900)};
+document.addEventListener("themechange",draw);addEventListener("resize",draw);addEventListener("load",draw);
+</script></body></html>

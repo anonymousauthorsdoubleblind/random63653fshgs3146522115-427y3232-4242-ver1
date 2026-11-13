@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Search explorer · Review materials</title><link rel="stylesheet" href="c90b96982/style.css">
+<script src="jfb80a026/config.js"></script><script src="jfb80a026/common.js"></script><script src="d6472958f/grids.js"></script><script src="d6472958f/runs.js"></script><script src="d6472958f/picks.js"></script></head><body><main>
+<h1>Search explorer</h1>
+<p class="lead">Replay any stored search, call by call, on the Skala energy map. Put two methods side by side. Numbered squares are the four starting points; circles are the points the method chose; the yellow one is the latest.</p>
+<div class="controls">
+<label>Reaction<select id="m"><option value="v">Vinyl alcohol → acetaldehyde</option><option value="f">Formamide → formimidic acid</option></select></label>
+<label>Starting design<select id="c"><option value="e">Edge anchors</option><option value="s">Scout's two wells</option><option value="r">Four random points</option></select></label>
+<label>Start (seed)<select id="s"></select></label>
+<label>Left panel<select id="a"></select></label>
+<label>Right panel<select id="b"></select></label>
+<label>Surface<select id="surf"><option value="skala">Skala (expensive)</option><option value="xtb">GFN2-xTB (scout)</option></select></label>
+</div>
+<div class="controls">
+<button class="btn" id="play">▶ Play</button>
+<label>Call number: <b id="kv"></b><input type="range" id="k" min="4" max="24" value="4"></label>
+<label><span><input type="checkbox" id="fp" checked> mark the false pass (vinyl alcohol)</span></label>
+<span class="small legend"><span>★ true pass</span><span>◇ lowest point of the starting well</span><span>✕ false-pass points (θ 90 and 80, r 0.9)</span></span>
+</div>
+<div class="panels"><div class="panel" id="pa"></div><div class="panel" id="pb"></div></div>
+<div class="panel" style="margin-top:14px"><b>Error of the barrier estimate against the number of calls</b> <span class="small">(green band: within 1 kcal/mol; dashed line: current call)</span><canvas id="ec" height="220"></canvas><div class="legend" id="eleg"></div></div>
+<p class="small">Data: the stored runs of NB12 (one session per reaction) and, for vinyl alcohol with edge anchors, the stored runs of NB10. Fixed rules are shown up to the call where the common stopping rule ends them. The agent runs end where the agent stopped. The error curve is the estimate after each call minus the full-grid barrier.</p>
+</main>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const q=new URLSearchParams(location.search);
+const ARMS=["agent","twin_wells_first","twin","control","saddle_exploit+delta","saddle_exploit","path_uncertainty+delta","path_uncertainty","uncertainty+delta","uncertainty","uniform+delta","uniform","random+delta","random"];
+for(let i=0;i<8;i++)$("s").add(new Option("start "+i,i));
+if(q.get("m"))$("m").value=q.get("m");if(q.get("c"))$("c").value=q.get("c");if(q.get("s"))$("s").value=q.get("s");
+function fillArms(){const m=$("m").value,c=$("c").value;const have=new Set(RUNS.filter(r=>r.m===m&&r.c===c).map(r=>r.a));const L=ARMS.filter(a=>have.has(a));
+  for(const id of ["a","b"]){$(id).innerHTML="";L.forEach(a=>$(id).add(new Option(SI.armName(a),a)));}
+  $("a").value=q.get("a")&&L.includes(q.get("a"))?q.get("a"):"agent";$("b").value=q.get("b")&&L.includes(q.get("b"))?q.get("b"):"saddle_exploit+delta";}
+fillArms();
+let timer=null;
+function run(arm){const m=$("m").value,c=$("c").value,s=+$("s").value;return RUNS.find(r=>r.m===m&&r.c===c&&r.a===arm&&r.s===s)}
+function pickInfo(arm,k){if(arm!=="agent")return null;const m=$("m").value,c=$("c").value,s=+$("s").value;const P=PICKS.find(p=>p.m===m&&p.c===c&&p.s===s);if(!P)return null;return P.menu.find(x=>x.call===k)||null}
+function draw(){
+  const m=$("m").value,G=GRIDS[SI.molKey(m)];const Z=G[$("surf").value];
+  const ra=run($("a").value),rb=run($("b").value);const mx=Math.max(ra.n,rb.n);
+  const K=$("k");K.max=mx;if(+K.value>mx)K.value=mx;const k=+K.value;$("kv").textContent=k+" of "+mx;
+  const marks=[{ij:G.saddle,shape:"star",color:"#fff"},{ij:G.well,shape:"diamond",color:"#ff6b6b"}];
+  if(m==="v"&&$("fp").checked){marks.push({ij:[9,3],shape:"x",color:"#ff2d55"},{ij:[8,3],shape:"x",color:"#ff9f1c"})}
+  [["pa",ra],["pb",rb]].forEach(([id,r])=>{
+    const el=$(id);const se=r.h[r.h.length-1];const kk=Math.min(k,r.n);const stopped=k>=r.n;
+    const info=pickInfo(r.a,kk);
+    el.innerHTML='<h3 style="margin-top:0">'+SI.armName(r.a)+'</h3><div class="small">stops after <b>'+r.n+'</b> calls · error at stop <b class="'+(r.ok?"ok":"bad")+'">'+(se>=0?"+":"")+se.toFixed(2)+' kcal/mol</b> · '+(r.ok?"within":"outside")+' 1 kcal/mol'+(r.cause?' · failure at the <b>'+r.cause+'</b>':'')+'</div><canvas></canvas><div class="small" id="'+id+'i"></div>';
+    SI.heat(el.querySelector("canvas"),G,Z,{picks:r.idx,upto:kk,marks:marks,cell:24});
+    let t=kk<=4?"Starting point "+kk+" of 4.":"Call "+kk+(stopped?" (the last call; the search stops)":"")+": θ = "+G.theta[r.idx[kk-1][0]]+", r = "+G.r[r.idx[kk-1][1]]+" Å.";
+    if(info)t+='<div class="why"><span class="pill">'+info.tag+'</span> '+info.why+'</div><div class="small">offered: '+info.off.join(" · ")+'</div>';
+    $(id+"i").innerHTML=t;});
+  curve(ra,rb,k);
+}
+function curve(ra,rb,k){
+  const cv=$("ec"),W=Math.max(300,Math.min(1100,cv.parentElement.clientWidth-24)),H=220;const dpr=window.devicePixelRatio||1;cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+"px";cv.style.height=H+"px";const x=cv.getContext("2d");x.setTransform(dpr,0,0,dpr,0,0);
+  const all=[...ra.h,...rb.h];const lim=Math.max(3,Math.min(25,Math.max(...all.map(Math.abs))));const ml=44,mb=26,mt=8,mr=8;
+  const X=c=>ml+(c-4)/(Math.max(ra.n,rb.n)-4||1)*(W-ml-mr),Y=e=>mt+(lim-Math.max(-lim,Math.min(lim,e)))/(2*lim)*(H-mt-mb);
+  x.fillStyle="rgba(46,125,79,.18)";x.fillRect(ml,Y(1),W-ml-mr,Y(-1)-Y(1));
+  x.strokeStyle=SI.css("--line");x.fillStyle=SI.css("--mut");x.font="11px sans-serif";x.textAlign="right";
+  [-lim,-lim/2,0,lim/2,lim].forEach(e=>{x.beginPath();x.moveTo(ml,Y(e));x.lineTo(W-mr,Y(e));x.stroke();x.fillText(e.toFixed(1),ml-4,Y(e)+4)});
+  x.textAlign="center";for(let c=4;c<=Math.max(ra.n,rb.n);c+=2)x.fillText(c,X(c),H-8);
+  const col=["#1b6b6b","#b4532a"];
+  [ra,rb].forEach((r,ix)=>{x.strokeStyle=col[ix];x.lineWidth=2.2;x.beginPath();r.h.forEach((e,i)=>{const c=4+i;i?x.lineTo(X(c),Y(e)):x.moveTo(X(c),Y(e))});x.stroke();
+    x.fillStyle=col[ix];r.h.forEach((e,i)=>{const c=4+i;if(c<=k){x.beginPath();x.arc(X(c),Y(e),3,0,7);x.fill()}})});
+  x.setLineDash([5,4]);x.strokeStyle=SI.css("--fg");x.lineWidth=1;x.beginPath();x.moveTo(X(Math.max(4,k)),mt);x.lineTo(X(Math.max(4,k)),H-mb);x.stroke();x.setLineDash([]);
+  $("eleg").innerHTML='<span><i style="background:'+col[0]+'"></i>'+SI.armName(ra.a)+'</span><span><i style="background:'+col[1]+'"></i>'+SI.armName(rb.a)+'</span>';
+}
+["m","c","s","a","b","surf","fp"].forEach(id=>$(id).addEventListener("change",()=>{if(id==="m"||id==="c"){q.delete("a");q.delete("b");fillArms()}stop();draw()}));
+$("k").addEventListener("input",()=>{stop();draw()});
+function stop(){if(timer){clearInterval(timer);timer=null;$("play").textContent="▶ Play"}}
+$("play").onclick=()=>{if(timer){stop();return}const K=$("k");if(+K.value>=+K.max)K.value=4;$("play").textContent="❚❚ Pause";timer=setInterval(()=>{if(+K.value>=+K.max){stop();return}K.value=+K.value+1;draw()},700)};
+document.addEventListener("themechange",draw);window.addEventListener("resize",draw);
+window.addEventListener("load",()=>{$("k").max=24;$("k").value=q.get("k")||99;draw()});
+})();
+</script></body></html>

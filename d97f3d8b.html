@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Source code · Review materials</title><link rel="stylesheet" href="c90b96982/style.css">
+<script src="jfb80a026/config.js"></script><script src="jfb80a026/common.js"></script></head><body><main>
+<h1>Source code</h1>
+<p class="lead">One Python module and four Google Colab notebooks. The module holds the surrogate model, the barrier on a grid, the language-model agent, the frozen and reordered twins, and the classical sampling rules. The notebooks run the studies.</p>
+<div id="warn" class="panel" style="border-color:var(--acc2);display:none"><b>Colab links not set yet.</b> Edit <code>jfb80a026/config.js</code> (in the folder that starts with <code>j</code>): put the GitHub user and repository name in <code>repo</code>. The notebooks can always be downloaded below and uploaded to Colab by hand.</div>
+<h2>Module</h2>
+<div class="tablewrap"><table><thead><tr><th>File</th><th>Content</th><th>Get it</th></tr></thead><tbody>
+<tr><td><code>fpes.py</code></td><td>Gaussian-process surrogate with Δ-learning, bottleneck barrier on a grid, menu agent (<code>run_menu_agent</code>), frozen twin, classical rules, anchor-first control, Gemini and Claude connectors, mock mode.</td><td><a class="btn alt" href="sf85a95e7/fpes.py" download>Download</a></td></tr>
+</tbody></table></div>
+<h2>Notebooks</h2>
+<div class="tablewrap"><table id="nbt"><thead><tr><th>Notebook</th><th>What it does</th><th>Needs</th><th>Open</th></tr></thead><tbody></tbody></table></div>
+<h2>Before you run</h2>
+<ul>
+<li><b>Hardware.</b> Skala needs a GPU: an L4 (about 6 s per energy) or a T4 (about 8–10 s). Agent runs and all comparisons run on the CPU.</li>
+<li><b>Gemini key.</b> Agent runs need a Google Gemini API key stored as a Colab secret named <code>GEMINI_API_KEY</code> (a second key, <code>GEMINI_API_KEY_2</code>, is optional). The model identifier is <code>gemini-3.8-flash</code>. Without a key, a mock mode runs the pipeline but gives no real agent results.</li>
+<li><b>Model weights.</b> Skala-1.1 weights come from Hugging Face. The first call downloads them.</li>
+<li><b>Threads.</b> Set <code>OMP_NUM_THREADS=1</code> when running agents in parallel. The notebooks do this.</li>
+<li><b>Drive.</b> Each notebook mounts Google Drive and writes to its own folder, listed in the table.</li>
+</ul>
+<h2>Licence</h2>
+<p>MIT licence for the code and notebooks in this site (see <code>LICENSE</code> at the root of the repository). Skala-1.1, PySCF, xTB and the Gemini service carry their own terms.</p>
+</main>
+<script>
+if(!SI.cfgOk())document.getElementById("warn").style.display="block";
+const N=[
+["NB10_vinyl_alcohol_keto_enol.ipynb","NB10 · Vinyl alcohol → acetaldehyde","Part A computes the 247-point Skala grid (GPU, about 25 min on an L4). Part B runs the agents against ten classical rules from eight starts (CPU, Gemini).","L4/T4 GPU for Part A; Gemini key for Part B","fruitful-pes-vinyl-alcohol"],
+["NB11_vinyl_alcohol_visuals_v2.ipynb","NB11 · GPU pictures","Skala electron density, fine re-scans of the pass and the well, relaxed path with Skala energies, anchor-first control, replay. Reads the NB10 results.","L4 GPU, about 2 h; no Gemini key","fruitful-pes-vinyl-alcohol-visuals"],
+["NB12a_start_design_vinyl.ipynb","NB12a · Start design, vinyl alcohol","Three starting designs × eight starts: agent, ten rules, frozen twin, reordered twin, anchor-first control.","Gemini key; GPU only if the grid is not stored","fruitful-pes-start-design-vinyl"],
+["NB12b_start_design_formamide.ipynb","NB12b · Start design, formamide","The same study on formamide → formimidic acid, including its own 247-point Skala grid.","Gemini key; L4/T4 GPU for the grid (about 25–30 min)","fruitful-pes-start-design-formamide"]];
+document.querySelector("#nbt tbody").innerHTML=N.map(n=>'<tr><td><b>'+n[1]+'</b><br><span class="small">'+n[0]+'</span><br><span class="small">Drive folder: '+n[4]+'</span></td><td>'+n[2]+'</td><td>'+n[3]+'</td><td><a class="btn" href="'+SI.colab(n[0])+'" target="_blank" rel="noopener">Open in Colab</a><br><br><a class="btn alt" href="sf85a95e7/'+n[0]+'" download>Download</a></td></tr>').join("");
+</script></body></html>
